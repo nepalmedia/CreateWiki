@@ -152,7 +152,17 @@ class WikiManagerFactory {
 			$dbQuotes = $this->dbw->addIdentifierQuotes( $this->dbname );
 			$this->dbw->query( "CREATE DATABASE {$dbQuotes} {$dbCollation};", __METHOD__ );
 		} catch ( Exception $e ) {
-			throw new WikiAlreadyExistsError( $this->dbname );
+			// MySQL error code 1007 is "Can't create database; database exists"
+			// We check if the error message contains indication that the database already exists
+			$errorMessage = $e->getMessage();
+			if ( strpos( $errorMessage, 'database exists' ) !== false ||
+				strpos( $errorMessage, 'Can\'t create database' ) !== false ||
+				$e->getCode() === 1007
+			) {
+				throw new WikiAlreadyExistsError( $this->dbname );
+			}
+			// Re-throw other exceptions as-is
+			throw $e;
 		}
 
 		if ( $this->lb ) {
