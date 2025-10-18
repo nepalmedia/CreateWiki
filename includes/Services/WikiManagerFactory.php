@@ -3,7 +3,6 @@
 namespace Miraheze\CreateWiki\Services;
 
 use Exception;
-use FatalError;
 use ManualLogEntry;
 use MediaWiki\Config\ConfigException;
 use MediaWiki\Config\ServiceOptions;
@@ -16,6 +15,7 @@ use MediaWiki\User\UserFactory;
 use MessageLocalizer;
 use Miraheze\CreateWiki\ConfigNames;
 use Miraheze\CreateWiki\Exceptions\MissingWikiError;
+use Miraheze\CreateWiki\Exceptions\WikiAlreadyExistsError;
 use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
 use Miraheze\CreateWiki\Maintenance\PopulateMainPage;
 use Miraheze\CreateWiki\Maintenance\SetContainersAccess;
@@ -152,7 +152,31 @@ class WikiManagerFactory {
 			$dbQuotes = $this->dbw->addIdentifierQuotes( $this->dbname );
 			$this->dbw->query( "CREATE DATABASE {$dbQuotes} {$dbCollation};", __METHOD__ );
 		} catch ( Exception $e ) {
-			throw new FatalError( "Wiki '{$this->dbname}' already exists." );
+			// Check if the error is specifically due to the database already existing
+			// MySQL error code 1007: ER_DB_CREATE_EXISTS
+			// We check both the error code and message patterns for robustness
+			$errorMessage = strtolower( $e->getMessage() );
+			$isDatabaseExists = false;
+
+			// Check MySQL error code (most reliable)
+			if ( $e->getCode() === 1007 ) {
+				$isDatabaseExists = true;
+			}
+
+			// Fallback to message pattern matching for cases where error code isn't available
+			if ( !$isDatabaseExists && (
+				strpos( $errorMessage, 'database exists' ) !== false ||
+				strpos( $errorMessage, 'already exists' ) !== false
+			) ) {
+				$isDatabaseExists = true;
+			}
+
+			if ( $isDatabaseExists ) {
+				throw new WikiAlreadyExistsError( $this->dbname );
+			}
+
+			// Re-throw other exceptions as-is so they can be handled appropriately
+			throw $e;
 		}
 
 		if ( $this->lb ) {
@@ -184,7 +208,7 @@ class WikiManagerFactory {
 		array $extra
 	): ?string {
 		if ( $this->exists() ) {
-			throw new FatalError( "Wiki '{$this->dbname}' already exists." );
+			throw new WikiAlreadyExistsError( $this->dbname );
 		}
 
 		$checkErrors = $this->validator->validateDatabaseName(

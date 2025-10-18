@@ -30,6 +30,7 @@
 	"createwiki-email-body": "Email body (if wiki requester has a registered email).",
 	"createwiki-email-subject": "Email subject (if wiki requester has a registered email).",
 	"createwiki-error-agreement": "Error message shown when the user does not agree to the terms in the wiki request form.",
+	"createwiki-error-alreadyexists": "Error message given when attempting to create a wiki that already exists. $1 is the wiki database name.",
 	"createwiki-error-cannot-edit-approved": "Error message when attempting to edit a wiki request that has already been approved.",
 	"createwiki-error-dbexists": "Used as error message when the database being created already exists.",
 	"createwiki-error-disallowed": "Error message displayed when a disallowed subdomain is entered in the wiki request form.",
