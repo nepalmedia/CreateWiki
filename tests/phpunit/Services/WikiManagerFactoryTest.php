@@ -2,11 +2,11 @@
 
 namespace Miraheze\CreateWiki\Tests\Services;
 
-use FatalError;
 use MediaWiki\Config\ConfigException;
 use MediaWiki\MainConfigNames;
 use MediaWikiIntegrationTestCase;
 use Miraheze\CreateWiki\ConfigNames;
+use Miraheze\CreateWiki\Exceptions\WikiAlreadyExistsError;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\CreateWiki\Services\WikiManagerFactory;
@@ -161,8 +161,8 @@ class WikiManagerFactoryTest extends MediaWikiIntegrationTestCase {
 	 * @covers ::exists
 	 */
 	public function testCreateExists(): void {
-		$this->expectException( FatalError::class );
-		$this->expectExceptionMessage( 'Wiki \'createwikitest\' already exists.' );
+		$this->expectException( WikiAlreadyExistsError::class );
+		$this->expectExceptionMessage( 'The wiki \'createwikitest\' already exists.' );
 
 		$this->createWiki( dbname: 'createwikitest', private: false );
 	}

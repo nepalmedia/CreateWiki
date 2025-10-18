@@ -3,7 +3,6 @@
 namespace Miraheze\CreateWiki\Services;
 
 use Exception;
-use FatalError;
 use ManualLogEntry;
 use MediaWiki\Config\ConfigException;
 use MediaWiki\Config\ServiceOptions;
@@ -16,6 +15,7 @@ use MediaWiki\User\UserFactory;
 use MessageLocalizer;
 use Miraheze\CreateWiki\ConfigNames;
 use Miraheze\CreateWiki\Exceptions\MissingWikiError;
+use Miraheze\CreateWiki\Exceptions\WikiAlreadyExistsError;
 use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
 use Miraheze\CreateWiki\Maintenance\PopulateMainPage;
 use Miraheze\CreateWiki\Maintenance\SetContainersAccess;
@@ -152,7 +152,7 @@ class WikiManagerFactory {
 			$dbQuotes = $this->dbw->addIdentifierQuotes( $this->dbname );
 			$this->dbw->query( "CREATE DATABASE {$dbQuotes} {$dbCollation};", __METHOD__ );
 		} catch ( Exception $e ) {
-			throw new FatalError( "Wiki '{$this->dbname}' already exists." );
+			throw new WikiAlreadyExistsError( $this->dbname );
 		}
 
 		if ( $this->lb ) {
@@ -184,7 +184,7 @@ class WikiManagerFactory {
 		array $extra
 	): ?string {
 		if ( $this->exists() ) {
-			throw new FatalError( "Wiki '{$this->dbname}' already exists." );
+			throw new WikiAlreadyExistsError( $this->dbname );
 		}
 
 		$checkErrors = $this->validator->validateDatabaseName(

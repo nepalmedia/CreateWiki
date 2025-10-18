@@ -5,6 +5,7 @@ namespace Miraheze\CreateWiki\Jobs;
 use Exception;
 use Job;
 use MediaWiki\User\User;
+use Miraheze\CreateWiki\Exceptions\WikiAlreadyExistsError;
 use Miraheze\CreateWiki\Services\WikiManagerFactory;
 use Miraheze\CreateWiki\Services\WikiRequestManager;
 use MWExceptionHandler;
@@ -79,6 +80,24 @@ class CreateWikiJob extends Job {
 
 				return true;
 			}
+		} catch ( WikiAlreadyExistsError $e ) {
+			$this->wikiRequestManager->addComment(
+				comment: 'The wiki already exists: ' . $e->getMessageObject()->text(),
+				user: User::newSystemUser( 'CreateWiki Extension' ),
+				log: false,
+				type: 'comment',
+				// Use all involved users
+				notifyUsers: []
+			);
+
+			$this->wikiRequestManager->log(
+				user: User::newSystemUser( 'CreateWiki Extension' ),
+				action: 'create-failure'
+			);
+
+			MWExceptionHandler::logException( $e );
+
+			return true;
 		} catch ( Exception $e ) {
 			$this->wikiRequestManager->addComment(
 				comment: 'Exception experienced creating the wiki. Error is: ' . $e->getMessage(),
