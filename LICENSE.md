@@ -1,25 +1,48 @@
 CreateWiki for Nepalpedia
 =========================
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Copyright (C) 2025  Nepalmedia Foundation  
+<https://nepalpedia.org>
 
-This software is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+This software, "CreateWiki for Nepalpedia", is an adaptation of the
+original CreateWiki extension developed by the Miraheze project.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
+# Attribution
 
-Developed and maintained by:
-  nepalpedia Foundation
-  https://nepalpedia.org
-  contact@nepalpedia.org
+Original concept and implementation:
+  © 2015–2024  The Miraheze Developers and Contributors
+  <https://miraheze.org>
 
-© 2025 nepalpedia Foundation. All rights reserved under the GPLv3 or later.
+Forked, customized, and maintained by:
+  © 2025  Nepalmedia Foundation
+  <https://nepalpedia.org>
+
+# Description
+
+CreateWiki for Nepalpedia is a MediaWiki extension for requesting and
+creating community wikis within the Nepalpedia network.  
+It retains the essential functionality of Miraheze’s CreateWiki while
+adapting configuration, workflow, and branding for the Nepalpedia ecosystem.
+
+# License
+
+This project is licensed under the GNU General Public License, version 3
+(or any later version).  
+You should have received a copy of the license along with this program;
+if not, visit <https://www.gnu.org/licenses/>.
+
+# Trademarks
+
+“Miraheze” and its associated marks are the property of their respective
+owners and are used here for attribution and historical reference only.  
+“Nepalpedia” is a project of the Nepalmedia Foundation.
+
+# Contact
+
+General inquiries:  info@nepalpedia.org  
+Security issues:    security@nepalpedia.org  
+Project website:    https://nepalpedia.org
+Issue tracker:      https://issue-tracker.nepalpedia.org
 
 ------------------------------------------------------------------------
 GNU General Public License
